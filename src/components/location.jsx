@@ -1,7 +1,9 @@
 import React from 'react';
-import ImagePath from '../constants/image-path';
+
 
 export default function Location() {
+  const { ImagePath } = window;
+
   return (
     <div className="location" id="location">
       <div className="address">

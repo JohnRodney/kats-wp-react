@@ -1,12 +1,17 @@
 import React from 'react';
-import ImagePath from '../constants/image-path';
+import { isDev } from '../utilities/index';
 /* TODO: Move this to a constant file */
+let prefix = '';
+
+if (isDev()) {
+  prefix = '/allpawnwp'
+}
 const links = [
-  { href: '/', content: 'Home' },
-  { href: '/#about', content: 'About' },
-  { href: '/#gear', content: 'Brands' },
-  { href: '/#location', content: 'Location' },
-  { href: '/products', content: 'Shop Now' },
+  { href: `${prefix}/`, content: 'Home' },
+  { href: `${prefix}/#about`, content: 'About' },
+  { href: `${prefix}/#gear`, content: 'Brands' },
+  { href: `${prefix}/#location`, content: 'Location' },
+  { href: `${prefix}/products`, content: 'Shop Now' },
 ];
 
 /* getLinksExpanded()
@@ -59,6 +64,8 @@ export default class FixedHeader extends React.Component {
    *   returns the layout for how the mobile menu looks when it is not hidden
    * * * */
   getMiniMenuLayout() {
+    const { ImagePath } = window;
+
     return (
       <div>
         <img
@@ -85,6 +92,8 @@ export default class FixedHeader extends React.Component {
   }
 
   getHamburger() {
+    const { ImagePath } = window;
+
     return (
       <div>
         <img onClick={() => { this.setState({ menuHidden: false }) }} id='hamburger' src={`${ImagePath}hamburger.png`} />
@@ -120,6 +129,8 @@ export default class FixedHeader extends React.Component {
 
 
   render() {
+    const { ImagePath } = window;
+
     return (
       <div className="fixed-header">
         <div className="header-title">

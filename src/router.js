@@ -6,6 +6,10 @@ import Home from './components/home';
 // import Login from './components/admin/login';
 // import Terms from './components/terms';
 
+const devRoutes = {
+  '/allpawnwp/': Home,
+};
+
 const routes = {
   '/': Home,
 /*
@@ -17,4 +21,8 @@ const routes = {
 */
 };
 
-mount(routes[window.location.pathname]);
+if (window.location.pathname.indexOf('allpawnwp') > -1) {
+  mount(devRoutes[window.location.pathname]);
+} else {
+  mount(routes[window.location.pathname]);
+}

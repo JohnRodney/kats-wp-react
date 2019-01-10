@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "transpile": "babel src -d lib",
-    "bundle": "./node_modules/.bin/webpack lib -o bundle.js",
+    "bundle": "./node_modules/.bin/webpack lib -o ./wp-theme/bundle.js",
     "build": "npm run transpile && npm run bundle"
   },
   "author": "",

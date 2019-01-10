@@ -3,7 +3,7 @@ import React from 'react';
  *   go to '../constants/about' to edit the verbiage on this section
  * * */
 import AboutInfo from '../constants/about';
-import ImagePath from '../constants/image-path';
+
 
 /* Simple static component for the #about section
  *   getInfo
@@ -14,6 +14,8 @@ import ImagePath from '../constants/image-path';
  * * * */
 
 function getInfo() {
+  const { ImagePath } = window;
+
   return AboutInfo.map(info => (
     <div className="column" key={`info-${info.text}`}>
       <div className="about-content">

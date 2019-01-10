@@ -1,6 +1,5 @@
 import React from 'react';
 import $ from 'jquery';
-import ImagePath from "../constants/image-path";
 /* GearBrandMap is an {Object} with [keys] who are types of gear IE: "Amps,
  * pedals, ect"
  *   each Type is the key and the value is an [Array] of "brandNames" in that
@@ -17,6 +16,8 @@ import { GearBrandMap } from '../constants/gear';
  *    return [Array] of <JSX-Layouts />
  * * * */
 function getListItems(key) {
+  const { ImagePath } = window;
+
   return GearBrandMap[key].map(brandName => (
     <li key={`brands-${brandName.name}`}>
       <div className="brand-name">{brandName.name}</div>
@@ -35,6 +36,8 @@ function getListItems(key) {
 }
 
 function getCategoryPathImageFromIndex(index) {
+  const { ImagePath } = window;
+
   return [
     <img src={`${ImagePath}pedal.png`} />,
     <img src={`${ImagePath}amp.png`} />,
