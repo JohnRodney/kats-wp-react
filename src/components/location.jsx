@@ -1,0 +1,39 @@
+import React from 'react';
+import ImagePath from '../constants/image-path';
+
+export default function Location() {
+  return (
+    <div className="location" id="location">
+      <div className="address">
+        <div className="address-content">
+          <div className="pin-container">
+            <img alt="location pin" src={`${ImagePath}pinicon.png`} />
+          </div>
+          <h3>All Pawn Kat&apos;s Guitars</h3>
+          <p>25907 Interstate 45 N,</p>
+          <p>Spring, TX 77380</p>
+          <p>(281) 363-2103</p>
+          <p>Monday - Friday: 9AM - 6:30PM</p>
+          <p>Saturday: 9AM - 5:30PM</p>
+          <p>Sunday: Closed</p>
+        </div>
+      </div>
+      <div className="map" />
+      <div className="address">
+        <div className="address-content">
+          <div className="pin-container">
+            <img alt="location pin" src={`${ImagePath}pinicon.png`} />
+          </div>
+          <h3>Allpawn II</h3>
+          <p>811 W. Montgomery</p>
+          <p>Willis, TX 77378</p>
+          <p>(936) 890-7296</p>
+          <p>Monday - Friday: 9AM - 6:30PM</p>
+          <p>Saturday: 9AM - 5:30PM</p>
+          <p>Sunday: Closed</p>
+        </div>
+      </div>
+      <div className="map2" />
+    </div>
+  );
+}

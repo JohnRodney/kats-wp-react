@@ -1,0 +1,34 @@
+{
+  "name": "katsv2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "transpile": "babel src -d lib",
+    "bundle": "./node_modules/.bin/webpack lib -o bundle.js",
+    "build": "npm run transpile && npm run bundle"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-mounter": "^1.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^6.26.3",
+    "eslint": "^5.12.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.12.3",
+    "webpack": "^4.28.1",
+    "webpack-cli": "^3.2.1"
+  }
+}
