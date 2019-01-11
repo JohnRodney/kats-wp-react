@@ -14,9 +14,12 @@ export default class Faq extends React.Component {
   }
 
   render() {
+    const { query } = this.state;
     const filteredFaq = faq
-      .filter(pair =>
-        contains(pair.question, this.state.query) || contains(pair.answer, this.state.query),
+      .filter(
+        pair => (
+          contains(pair.question, query) || contains(pair.answer, query)
+        ),
       );
 
     return (
@@ -29,7 +32,7 @@ export default class Faq extends React.Component {
         <br />
         {
           filteredFaq.map(qaPair => (
-            <div key={qaPair.question.replace(/ /g, '-')}className="a-qa-pair">
+            <div key={qaPair.question.replace(/ /g, '-')} className="a-qa-pair">
               <div className="questions">
                 <h2>{qaPair.question}</h2>
               </div>

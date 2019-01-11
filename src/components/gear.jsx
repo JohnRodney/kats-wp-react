@@ -8,7 +8,7 @@ import $ from 'jquery';
  * If you wish to edit the list of categories and brand names do so in the file
  *   '../constants/gear.jsx'
  * * * */
-import { GearBrandMap } from '../constants/gear';
+import GearBrandMap from '../constants/gear';
 
 /* getListItem (key)
  *  accepts argument key which is the type IE: "AMPLIFIERS"
@@ -25,6 +25,7 @@ function getListItems(key) {
         <img alt={`${brandName} logo`} src={ImagePath + brandName.logoPath} />
       </div>
       <button
+        type="button"
         onClick={() => {
           window.location = `/products?q=${brandName.name.replace(/MXR\//g, '').replace(/-/g, ' ')}`;
         }}
@@ -39,11 +40,11 @@ function getCategoryPathImageFromIndex(index) {
   const { ImagePath } = window;
 
   return [
-    <img src={`${ImagePath}pedal.png`} />,
-    <img src={`${ImagePath}amp.png`} />,
-    <img src={`${ImagePath}pickup.png`} />,
-    <img src={`${ImagePath}tube.png`} />,
-    <img src={`${ImagePath}lighting.png`} />,
+    <img alt="pedal filter" src={`${ImagePath}pedal.png`} />,
+    <img alt="amp filter" src={`${ImagePath}amp.png`} />,
+    <img alt="pickup filter" src={`${ImagePath}pickup.png`} />,
+    <img alt="tube filter" src={`${ImagePath}tube.png`} />,
+    <img alt="lighting filter" src={`${ImagePath}lighting.png`} />,
   ][index];
 }
 
@@ -72,15 +73,25 @@ export default class GearList extends React.Component {
    *    returns [Array] of <JSX-Layouts />
    * * */
   getLists() {
+    const { activeCategory } = this.state;
+
     return Object.keys(GearBrandMap).map((key, i) => (
-      <div key={`gear-category-${key}`} className={`a-gear-category ${this.state.activeCategory === key ? 'focus' : ''}`} onClick={() => { window.scroll(0, $('#gear').offset().top + 30); this.setState({ activeCategory: key }); }}>
+      <div
+        role="button"
+        tabIndex={0}
+        key={`gear-category-${key}`}
+        className={`a-gear-category ${activeCategory === key ? 'focus' : ''}`}
+        onKeyPress={() => { window.scroll(0, $('#gear').offset().top + 30); this.setState({ activeCategory: key }); }}
+        onClick={() => { window.scroll(0, $('#gear').offset().top + 30); this.setState({ activeCategory: key }); }}
+      >
         <div>{key}</div>
-        {getCategoryPathImageFromIndex(i)}
+        { getCategoryPathImageFromIndex(i) }
       </div>
     ));
   }
 
   render() {
+    const { activeCategory } = this.state;
     return (
       <div id="gear" className="gear-list">
         <h1>Full line brand selection!</h1>
@@ -88,7 +99,7 @@ export default class GearList extends React.Component {
           {this.getLists()}
         </div>
         <ul>
-          {getListItems(this.state.activeCategory)}
+          { getListItems(activeCategory) }
         </ul>
         <div className="divider" />
       </div>

@@ -2,8 +2,8 @@ function BrandFactory(name, logoPath) {
   return { name, logoPath };
 }
 
-export const GearBrandMap = {
-  'PEDALS': [
+export default {
+  PEDALS: [
     BrandFactory('Wampler', 'wampler-pedal.png'),
     BrandFactory('Electro-Harmonix', 'electro-harmonic-pedal.png'),
     BrandFactory('Behringer', 'behringer-pedal.png'),
@@ -23,12 +23,12 @@ export const GearBrandMap = {
     BrandFactory('Pro Co Rat', 'pro-rat-cat-pedal.png'),
     BrandFactory('Mooer', 'mooer-pedal.png'),
     BrandFactory('Digitech', 'digitech-pedal.png'),
-    BrandFactory('Amptweaker *', 'amptweaker-pedal.png'),
-    BrandFactory('AMT *', 'amt-pedal.png'),
-    BrandFactory('Strymon *', 'strymon-pedal.png'),
-    BrandFactory('Seymour Duncan *', 'seymour-duncan-pedal.png'),
+    BrandFactory('Amptweaker', 'amptweaker-pedal.png'),
+    BrandFactory('AMT', 'amt-pedal.png'),
+    BrandFactory('Strymon', 'strymon-pedal.png'),
+    BrandFactory('Seymour Duncan', 'seymour-duncan-pedal.png'),
   ],
-  'AMPS': [
+  AMPS: [
     BrandFactory('Krank', 'krank-amp.png'),
     BrandFactory('Blackstar', 'blackstar-amp.png'),
     BrandFactory('Marshall', 'marshall-amp.png'),
@@ -39,7 +39,7 @@ export const GearBrandMap = {
     BrandFactory('EVH', 'evh-amp.png'),
     BrandFactory('Peavey', 'peavy-amp.png'),
   ],
-  'PICKUPS': [
+  PICKUPS: [
     BrandFactory('Fender', 'fender-pickups.png'),
     BrandFactory('Gibson', 'gibson-pickups.png'),
     BrandFactory('Rio Grande', 'rio-grande-pickups.png'),
@@ -51,7 +51,7 @@ export const GearBrandMap = {
     BrandFactory('EVH', 'evh-pickups.png'),
     BrandFactory('Seymour Duncan', 'seymour-pickup.png'),
   ],
-  'TUBES': [
+  TUBES: [
     BrandFactory('Mullard', 'mullard-tube.png'),
     BrandFactory('JJ', 'jj-tube.png'),
     BrandFactory('Sovtek', 'sovtek-tube.png'),
@@ -59,7 +59,7 @@ export const GearBrandMap = {
     BrandFactory('Winged “C”', 'winged-c-tube.png'),
     BrandFactory('Electro-Harmonix', 'electro-harmonix-tube.png'),
   ],
-  'STAGE': [
+  STAGE: [
     BrandFactory('MBT', 'mbt-lighting.png'),
     BrandFactory('American DJ', 'american-dj-lighting.png'),
   ],

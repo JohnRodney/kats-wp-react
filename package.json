@@ -14,8 +14,10 @@
   "dependencies": {
     "jquery": "^3.3.1",
     "react": "^16.7.0",
+    "react-avatar-editor": "^11.0.4",
     "react-dom": "^16.7.0",
-    "react-mounter": "^1.2.0"
+    "react-mounter": "^1.2.0",
+    "react-virtualized": "^9.21.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
