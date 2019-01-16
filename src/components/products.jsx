@@ -90,7 +90,6 @@ export default class Products extends React.Component {
    * state.
    * * */
   handleProductResponse(err, response, page) {
-    console.log(err, response, page);
     const pageCount = response.page_count;
     const { items } = response;
     let { products } = this.state;
@@ -119,7 +118,7 @@ export default class Products extends React.Component {
     /* ["some", "search", "phrase"] */
     const queryWords = query.toLowerCase().split(' ').filter(q => q !== '');
     const noQuery = queryWords.length === 0;
-    console.log(noQuery, products);
+
     const filteredProducts = noQuery ? products : [];
 
     queryWords.reduce((acc, next) => {
@@ -137,7 +136,7 @@ export default class Products extends React.Component {
       prod && prod.characteristics && asProduct && asProduct.characteristics
       && prod.characteristics.sku === asProduct.characteristics.sku
     ));
-    console.log(asProduct, index, filteredProducts);
+
     const isTransform = asTransform.length > 0;
     const product = isTransform ? asTransform[0] : asProduct;
     const productHasPhoto = asProduct.photo_urls.length > 0;
