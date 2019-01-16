@@ -1,10 +1,12 @@
 import React from 'react';
 import { List } from 'react-virtualized';
+import $ from 'jquery';
 import Checkout from './checkout/checkout';
 import convert from '../utilities/convert';
 import ShoppingCartOverview from './shopping-cart/overview';
 import FixedSearchBar from './shopping-cart/search-bar';
 import FixedHeader from './header';
+
 
 /*
  * TODO: Refactor and add this sort to improve search quality.  Need to move
@@ -42,6 +44,9 @@ export default class Products extends React.Component {
       query: '',
       gettingMoreData: true,
     };
+    this.rowRenderer = this.rowRenderer.bind(this);
+    this.updateCart = this.updateCart.bind(this);
+    this.closeCart = this.closeCart.bind(this);
   }
 
   /* grabs the query from the url and stores is as the default search query */
@@ -57,26 +62,39 @@ export default class Products extends React.Component {
   /* Once everything has rendered then getProduct and transform data */
   componentDidMount() {
     this.getEforoProducts(1);
+    /*
+     TODO: Meteor needs replaced by wordpress backend
     Meteor.call('getTransforms', (err, transforms) => {
       if (!err) { this.setState({ transforms }); }
     });
+    */
     $(window).resize(() => this.forceUpdate());
   }
 
   /* Call Meteor backend to retrieve data from eforo */
   getEforoProducts(page) {
+    const devEndpoint = `http://localhost:8888/allpawnwp/wp-json/allpawn/v1/products?status=IN_QUEUE&page=${page}`;
+
+    $.get(devEndpoint, (res, status) => (
+      this.handleProductResponse(status, JSON.parse(res), page)
+    ));
+    /*
+    TODO: REmove this after the above is working properly
     Meteor.call('getEforoProducts', page,
       (err, res) => this.handleProductResponse(err, res, page),
     );
+    */
   }
 
   /* Keeps reading pages of responses from Eforo and concats products to
    * state.
    * * */
   handleProductResponse(err, response, page) {
-    console.log(err, response, page)
-    const { items, pageCount } = response;
-    const products = this.state.products.concat(items);
+    console.log(err, response, page);
+    const pageCount = response.page_count;
+    const { items } = response;
+    let { products } = this.state;
+    products = products.concat(items);
     const gettingMoreData = page < pageCount;
     this.setState({ products, gettingMoreData });
 
@@ -92,16 +110,16 @@ export default class Products extends React.Component {
   }
 
   rowRenderer({
-    key,         // Unique key within array of rows
-    index,       // Index of row within collection
-    style,        // Style object to be applied to row (to position it)
+    key,
+    index,
+    style,
   }) {
     const { products } = this.state;
     const { query } = this.state;
     /* ["some", "search", "phrase"] */
     const queryWords = query.toLowerCase().split(' ').filter(q => q !== '');
     const noQuery = queryWords.length === 0;
-    console.log(noQuery, products)
+    console.log(noQuery, products);
     const filteredProducts = noQuery ? products : [];
 
     queryWords.reduce((acc, next) => {
@@ -114,13 +132,35 @@ export default class Products extends React.Component {
     }, products);
 
     const asProduct = filteredProducts[index];
-    const asTransform = this.state.transforms.filter(prod =>
-      prod && prod.characteristics && asProduct && asProduct.characteristics && prod.characteristics.sku === asProduct.characteristics.sku,
-    );
-    console.log(asProduct, index, filteredProducts)
+    const { transforms } = this.state;
+    const asTransform = transforms.filter(prod => (
+      prod && prod.characteristics && asProduct && asProduct.characteristics
+      && prod.characteristics.sku === asProduct.characteristics.sku
+    ));
+    console.log(asProduct, index, filteredProducts);
     const isTransform = asTransform.length > 0;
     const product = isTransform ? asTransform[0] : asProduct;
     const productHasPhoto = asProduct.photo_urls.length > 0;
+
+    const productPhoto = (
+      <img
+        alt={product.title}
+        src={
+          productHasPhoto
+            ? asProduct.photo_urls[asProduct.photo_urls.length - 1]
+            : product.photo_urls[product.photo_urls.length - 1]
+        }
+      />
+    );
+
+    const photoPlaceholder = (
+      <img
+        alt="missing"
+        src="https://www.us.aspjj.com/sites/aspjj.com.us/files/default_images/No_available_image_3.jpg"
+      />
+    );
+
+    const { cart } = this.state;
 
     return (
       <div
@@ -131,11 +171,11 @@ export default class Products extends React.Component {
         <div>
           <div className="image-price">
             {
-              product.photo_urls.length > 0 || productHasPhoto ?
-                <img alt={product.title} src={productHasPhoto ? asProduct.photo_urls[asProduct.photo_urls.length - 1] : product.photo_urls[product.photo_urls.length - 1]} /> :
-                <img alt="missing" src="https://www.us.aspjj.com/sites/aspjj.com.us/files/default_images/No_available_image_3.jpg" />
+              product.photo_urls.length > 0 || productHasPhoto
+                ? productPhoto
+                : photoPlaceholder
             }
-            <h2>${parseFloat(product.value).toFixed(2)}</h2>
+            <h2>{`$${parseFloat(product.value).toFixed(2)}`}</h2>
           </div>
           <div className="product-content">
             <h1>{`${convert(product.characteristics.manufacturer)} ${product.characteristics.model}`}</h1>
@@ -143,30 +183,36 @@ export default class Products extends React.Component {
           </div>
           <div className="shopping-cart-buttons">
             <button
+              type="button"
               className="add-to-cart"
               onClick={() => {
-                const isNotInCart = this.state.cart.filter(p =>
-                  p.characteristics.sku === product.characteristics.sku && product.quantity === '1',
-                ).length === 0;
+                const isNotInCart = cart.filter(p => (
+                  p.characteristics.sku === product.characteristics.sku && product.quantity === '1'
+                )).length === 0;
 
                 if (isNotInCart) {
                   if (productHasPhoto) {
                     product.photo_urls = [asProduct.photo_urls[asProduct.photo_urls.length - 1]];
                   }
-                  this.setState({ cart: this.state.cart.concat([product]) });
+                  this.setState({ cart: cart.concat([product]) });
                 }
               }}
-            >ADD TO CART</button>
+            >
+              ADD TO CART
+            </button>
             <button
+              type="button"
               className="add-to-cart checkout"
-              onClick={() =>
-                  this.setState({
-                    showCheckout: true,
-                    showCart: false,
-                    cart: this.state.cart.concat([product]),
-                  })
-              }
-            >ADD AND CHECKOUT</button>
+              onClick={() => (
+                this.setState({
+                  showCheckout: true,
+                  showCart: false,
+                  cart: cart.concat([product]),
+                })
+              )}
+            >
+              ADD AND CHECKOUT
+            </button>
           </div>
         </div>
       </div>
@@ -176,12 +222,18 @@ export default class Products extends React.Component {
   render() {
     const {
       showCart,
+      showCheckout,
       products,
       query,
+      cart,
+      gettingMoreData,
+      type,
     } = this.state;
+
     const queryWords = query.toLowerCase().split(' ').filter(q => q !== '');
     const noQuery = queryWords.length === 0;
     const filteredProducts = noQuery ? products : [];
+
     queryWords.reduce((acc, next) => {
       const wordRegex = new RegExp(next.toLowerCase(), 'i');
       return acc.filter((p) => {
@@ -190,54 +242,58 @@ export default class Products extends React.Component {
         return !doesMatch;
       });
     }, products);
-    const loading = products.length === 0 ||
-      (this.state.gettingMoreData && filteredProducts.length === 0);
+
+    const loading = products.length === 0
+      || (gettingMoreData && filteredProducts.length === 0);
     const listHeight = window.innerWidth < 720 ? 500 : 300;
 
     return (
       <div className="page">
         {
-          !showCart ?
-            '' :
-            <ShoppingCartOverview
-              openCheckout={() => this.setState({ showCheckout: true, showCart: false })}
-              cart={this.state.cart}
-              updateCart={cart => this.setState({ cart })}
-            />
+          !showCart
+            ? ''
+            : (
+              <ShoppingCartOverview
+                openCheckout={() => this.setState({ showCheckout: true, showCart: false })}
+                cart={cart}
+                updateCart={c => this.setState({ cart: c })}
+              />
+            )
         }
         <div className="products">
           <FixedHeader />
           <FixedSearchBar
-            query={this.state.query}
-            setQuery={query => this.setState({ query })}
-            gettingMoreData={this.state.gettingMoreData}
+            query={query}
+            setQuery={q => this.setState({ query: q })}
+            gettingMoreData={gettingMoreData}
             showCart={showCart}
             toggleCart={() => this.setState({ showCart: !showCart })}
             filteredProducts={filteredProducts}
-            cart={this.state.cart}
+            cart={cart}
           />
           {
-            loading ?
-              <div className="loader">Loading...</div> :
-              <div />
+            loading
+              ? <div className="loader">Loading...</div>
+              : <div />
           }
           <List
             width={window.innerWidth}
             height={window.innerHeight}
-            type={this.state.type}
+            type={type}
             rowCount={filteredProducts.length}
             rowHeight={listHeight}
-            rowRenderer={this.rowRenderer.bind(this)}
+            rowRenderer={this.rowRenderer}
           />
         </div>
         {
-          this.state.showCheckout ?
-            <Checkout
-              update={this.updateCart.bind(this)}
-              close={this.closeCart.bind(this)}
-              cart={this.state.cart}
-            /> :
-            ''
+          showCheckout
+            ? (
+              <Checkout
+                update={this.updateCart}
+                close={this.closeCart}
+                cart={cart}
+              />
+            ) : ''
         }
       </div>
     );

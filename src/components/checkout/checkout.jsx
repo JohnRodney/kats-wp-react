@@ -1,5 +1,4 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
 import Products from './products';
 
 function validateCreditCardNumber(number, component, key) {
@@ -277,6 +276,7 @@ export default class Checkout extends React.Component {
     const { cart, update } = this.props;
     const { cardNumber, expirationDate, cardCode } = this.state;
 
+    /* TODO Replace with wordpress method
     Meteor.call(
       'authCreditCard',
       cart, {
@@ -300,6 +300,7 @@ export default class Checkout extends React.Component {
         }
       },
     );
+    */
   }
 
   buyItem() {
@@ -315,6 +316,28 @@ export default class Checkout extends React.Component {
       country: scountry,
     };
 
+    /* TODO: Change url for production endpoint */
+    const url = 'http://localhost:8888/allpawnwp/wp-json/allpawn/v1/purchase-product';
+
+    return cart.reduce((acc, next) => {
+      return acc.then(() => new Promise((resolve, reject) => {
+        const postBody = {
+          propList: 'customer,product',
+          customer,
+          product: next,
+        };
+
+        $.post(url, postBody, responseData => {
+          console.log(`responseData: ${JSON.parse(responseData)}`);
+          resolve({ responseData });
+        });
+      }),
+    )}, Promise.resolve());
+
+
+
+    /*
+     * TODO remove this after above replacement is tested and works properly
     return cart.reduce((acc, next) => {
       return acc.then(() => new Promise((resolve, reject) => {
         Meteor.call('markEforoProductAsSold', next, customer, (err, res) => {
@@ -323,5 +346,6 @@ export default class Checkout extends React.Component {
         });
       }),
     )}, Promise.resolve());
+    */
   }
 }
