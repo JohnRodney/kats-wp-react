@@ -226,7 +226,6 @@ export default class Checkout extends React.Component {
 
     return new Promise((resolve) => {
       $.post(url, postBody, (responseData) => {
-        console.log('uhmmohjk')
         console.log(responseData);
         if (true /* add an error check */) {
           const stubAuth = 'heyo';
@@ -269,7 +268,7 @@ export default class Checkout extends React.Component {
   }
 
   buyItem() {
-    console.log('buy item')
+    console.log('buy item');
     const { cart } = this.props;
     const {
       sfirstName, slastName, email, saddress, scity, sstate, szip, scountry,
@@ -326,12 +325,6 @@ export default class Checkout extends React.Component {
 
     return (
       <div className="checkout-component">
-        <h1 className="cc-disabled">
-          ATTENTION: Credit Card / Bank Card Transactions are currently disabled we
-          apologize for the inconvenience. Please call the store at
-          <a href="tel:1-281-363-2103">281-363-2103</a>
-          to finish this transaction.
-        </h1>
         <a className="terms-link" href="/terms">Terms and Conditions</a>
         <br />
         {

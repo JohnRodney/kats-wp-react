@@ -140,8 +140,9 @@ export default function markEforoProdctAsSold(product, buyer) {
 
 function chargeCreditCard($cart, $card, $formData) {
   $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
-  $merchantAuthentication->setName(SANDBOX_CC_AUTH_LOGIN);
-  $merchantAuthentication->setTransactionKey(SANDBOX_CC_AUTH_TRANSACTION_KEY);
+  $merchantAuthentication->setName(CC_AUTH_LOGIN);
+  $merchantAuthentication->setTransactionKey(CC_AUTH_TRANSACTION_KEY);
+
 
   // Set the transaction's refId
   $refId = 'ref' . time();
@@ -223,7 +224,7 @@ function chargeCreditCard($cart, $card, $formData) {
 
   // Create the controller and get the response
   $controller = new AnetController\CreateTransactionController($request);
-  $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
+  $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
 
   if ($response != null) {
     // Check to see if the API request was successfully received and acted upon
