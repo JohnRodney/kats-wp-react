@@ -212,6 +212,7 @@ export default class Checkout extends React.Component {
     console.log(cart, update, cardNumber, expirationDate, cardCode);
 
     const url = 'http://localhost:8888/allpawnwp/wp-json/allpawn/v1/checkout';
+    const prodEndpoint = 'http://allpawn.com/wp-json/allpawn/v1/checkout';
 
     const postBody = {
       propList: 'cart,card,formData',
@@ -225,13 +226,12 @@ export default class Checkout extends React.Component {
     };
 
     return new Promise((resolve) => {
-      $.post(url, postBody, (responseData) => {
+      $.post(prodEndpoint, postBody, (responseData) => {
         console.log(responseData);
         if (true /* add an error check */) {
           const stubAuth = 'heyo';
           this.setState({ auth: true, authId: stubAuth, processingPayment: false, paymentErrors: {} });
           this.buyItem();
-          console.log('in iffff ')
         } else {
           const errStub = 'some error happened dude';
           this.setState({ auth: false, processingPayment: false, paymentErrors: errStub });

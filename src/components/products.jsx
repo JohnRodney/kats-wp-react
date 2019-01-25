@@ -74,8 +74,9 @@ export default class Products extends React.Component {
   /* Call Meteor backend to retrieve data from eforo */
   getEforoProducts(page) {
     const devEndpoint = `http://localhost:8888/allpawnwp/wp-json/allpawn/v1/products?status=IN_QUEUE&page=${page}`;
+    const prodEndpoint = `http://allpawn.com/wp-json/allpawn/v1/products?status=IN_QUEUE&page=${page}`;
 
-    $.get(devEndpoint, (res, status) => (
+    $.get(prodEndpoint, (res, status) => (
       this.handleProductResponse(status, JSON.parse(res), page)
     ));
     /*
